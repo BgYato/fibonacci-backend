@@ -3,7 +3,9 @@ package com.bgyato.fibonacci_time_backend.service.impl;
 import com.bgyato.fibonacci_time_backend.models.dto.FibonacciResponse;
 import com.bgyato.fibonacci_time_backend.models.entity.FibonacciEntity;
 import com.bgyato.fibonacci_time_backend.repository.IFibonacciRepository;
+import com.bgyato.fibonacci_time_backend.service.EmailService;
 import com.bgyato.fibonacci_time_backend.service.interfaces.IFibonacciService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,10 @@ import java.util.stream.Collectors;
 public class FibonacciServiceImpl implements IFibonacciService {
 
     private final IFibonacciRepository fibonacciRepository;
+    private final EmailService emailService;
 
     @Override
-    public FibonacciResponse generateFibonacciDefault() {
+    public FibonacciResponse generateFibonacciDefault() throws MessagingException {
         LocalTime now = LocalTime.now();
         return FibonacciResponse.builder()
                 .timeExecution(formatTime(now))
@@ -30,7 +33,7 @@ public class FibonacciServiceImpl implements IFibonacciService {
     }
 
     @Override
-    public FibonacciResponse generateFibonacciByTime(String time) {
+    public FibonacciResponse generateFibonacciByTime(String time) throws MessagingException {
         if (time == null || time.isEmpty()) throw new IllegalArgumentException("The time is null or empty.");
         LocalTime localTime;
         try {
@@ -54,7 +57,7 @@ public class FibonacciServiceImpl implements IFibonacciService {
                 .collect(Collectors.toList());
     }
 
-    private String generateFibonacci(LocalTime time) {
+    private String generateFibonacci(LocalTime time) throws MessagingException {
         if (time == null) time = LocalTime.now();
 
         int minutes = time.getMinute();
@@ -82,6 +85,9 @@ public class FibonacciServiceImpl implements IFibonacciService {
                 .collect(Collectors.joining(", "));
 
         saveSeries(formatTime(time), seriesString);
+        emailService.sendEmail("didier.correa@proteccion.com.co", "Prueba técnica - Andres Felipe Yate Muñoz", "Se ha generado una nueva serie a las "+formatTime(time)+" y el resultado es "+seriesString);
+        emailService.sendEmail("correalondon@gmail.com", "Prueba técnica - Andres Felipe Yate Muñoz", "Se ha generado una nueva serie a las "+formatTime(time)+" y el resultado es "+seriesString);
+        emailService.sendEmail("andresfyatem@gmail.com", "Prueba técnica - Andres Felipe Yate Muñoz", "Se ha generado una nueva serie a las "+formatTime(time)+" y el resultado es "+seriesString);
 
         return seriesString;
     }

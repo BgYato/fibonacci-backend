@@ -22,7 +22,7 @@ public class EmailController {
     @PostMapping("/send-email")
     public ResponseEntity<String> sendEmail(@RequestBody EmailRequest emailRequest) {
         try {
-            emailService.sendEmail(emailRequest.getTo(), emailRequest.getSubject(), null);
+            emailService.sendEmail(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getBody());
             return ResponseEntity.ok("Email sent successfully");
         } catch (MessagingException e) {
             return ResponseEntity.status(500).body("Failed to send email: " + e.getMessage());

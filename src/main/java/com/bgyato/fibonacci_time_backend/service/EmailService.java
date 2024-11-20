@@ -20,17 +20,13 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
-    private IFibonacciService service;
-
-
     public void sendEmail(String to, String subject, String text) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(service.listFibonacciSeries().toString(), true);
+        helper.setText(text, true);
         helper.setFrom("andresfyatem@gmail.com");
 
         mailSender.send(message);

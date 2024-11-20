@@ -3,6 +3,7 @@ package com.bgyato.fibonacci_time_backend.controllers;
 import com.bgyato.fibonacci_time_backend.models.dto.FibonacciRequest;
 import com.bgyato.fibonacci_time_backend.models.dto.FibonacciResponse;
 import com.bgyato.fibonacci_time_backend.service.interfaces.IFibonacciService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class FibonacciController {
     private final IFibonacciService fibonacciService;
 
     @GetMapping("")
-    private ResponseEntity<FibonacciResponse> getFibonacciDefault() {
+    private ResponseEntity<FibonacciResponse> getFibonacciDefault() throws MessagingException {
         return ResponseEntity.status(HttpStatus.OK).body(fibonacciService.generateFibonacciDefault());
     }
 
@@ -29,7 +30,7 @@ public class FibonacciController {
     }
 
     @PostMapping("/generate")
-    private ResponseEntity<FibonacciResponse> getFibonacciByTime(@RequestBody FibonacciRequest request) {
+    private ResponseEntity<FibonacciResponse> getFibonacciByTime(@RequestBody FibonacciRequest request) throws MessagingException {
         return ResponseEntity.status(HttpStatus.OK).body(fibonacciService.generateFibonacciByTime(request.getTime()));
     }
 
